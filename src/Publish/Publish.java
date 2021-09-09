@@ -128,9 +128,7 @@ public class Publish extends javax.swing.JFrame {
     private void B_enviarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_enviarMouseClicked
 
         while(true){
-            // What % CPU load this current JVM is taking, from 0.0-1.0
-
-            // What % load the overall system is at, from 0.0-1.0
+            
             cpu = (float) osBean.getSystemCpuLoad();
             cpu = cpu * 100;
             aux = (int) cpu;
