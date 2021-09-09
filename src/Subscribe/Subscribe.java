@@ -37,8 +37,9 @@ public class Subscribe extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         B_conectar = new javax.swing.JButton();
-        L_cpu = new javax.swing.JLabel();
+        L_jvm = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        L_cpu1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -51,41 +52,48 @@ public class Subscribe extends javax.swing.JFrame {
             }
         });
 
-        L_cpu.setBackground(new java.awt.Color(255, 255, 255));
-        L_cpu.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        L_cpu.setForeground(new java.awt.Color(51, 102, 0));
+        L_jvm.setBackground(new java.awt.Color(255, 255, 255));
+        L_jvm.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        L_jvm.setForeground(new java.awt.Color(51, 102, 0));
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 255));
         jLabel3.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(51, 102, 0));
         jLabel3.setText("CPU:");
 
+        L_cpu1.setBackground(new java.awt.Color(255, 255, 255));
+        L_cpu1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        L_cpu1.setForeground(new java.awt.Color(51, 102, 0));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(B_conectar, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(148, 148, 148)
-                        .addComponent(L_cpu, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 180, Short.MAX_VALUE)))
+                .addContainerGap(268, Short.MAX_VALUE)
+                .addComponent(B_conectar, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(144, 144, 144)
+                .addComponent(L_jvm, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(98, 98, 98)
                     .addComponent(jLabel3)
                     .addContainerGap(257, Short.MAX_VALUE)))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(158, 158, 158)
+                    .addComponent(L_cpu1, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(180, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(92, 92, 92)
-                .addComponent(L_cpu, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 152, Short.MAX_VALUE)
+                .addContainerGap(174, Short.MAX_VALUE)
+                .addComponent(L_jvm, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(70, 70, 70)
                 .addComponent(B_conectar)
                 .addContainerGap())
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -93,6 +101,11 @@ public class Subscribe extends javax.swing.JFrame {
                     .addGap(92, 92, 92)
                     .addComponent(jLabel3)
                     .addContainerGap(186, Short.MAX_VALUE)))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(102, 102, 102)
+                    .addComponent(L_cpu1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(176, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -114,7 +127,7 @@ public class Subscribe extends javax.swing.JFrame {
             MqttClient clienteS = new MqttClient("tcp://localhost", "Subscribe");
             clienteS.connect();
             System.out.println("Cliente conectado!");
-            clienteS.subscribe("/cpu");
+            clienteS.subscribe("/test/#");
             clienteS.setCallback(new MqttCallback() {
                 @Override
                 public void connectionLost(Throwable thrwbl) {
@@ -123,8 +136,15 @@ public class Subscribe extends javax.swing.JFrame {
 
                 @Override
                 public void messageArrived(String string, MqttMessage msg) throws Exception {
-                   String mensagem = msg.toString();
-                   L_cpu.setText(mensagem);
+                    if(string.equals("/test/jvm")){
+                        String mensagem = msg.toString();
+                        L_jvm.setText(mensagem);
+                    }
+                    if(string.equals("/test/cpu")){
+                        String mensagem = msg.toString();
+                        L_cpu1.setText(mensagem);
+                    }
+                   
                 }
 
                 @Override
@@ -176,7 +196,8 @@ public class Subscribe extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton B_conectar;
-    private javax.swing.JLabel L_cpu;
+    private javax.swing.JLabel L_cpu1;
+    private javax.swing.JLabel L_jvm;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
