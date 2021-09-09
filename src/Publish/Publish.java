@@ -16,6 +16,7 @@ public class Publish extends javax.swing.JFrame {
     MqttClient clienteP;
     float cpu;
     String msg;
+    int aux;
     public Publish() {
         initComponents();
     }
@@ -124,26 +125,25 @@ public class Publish extends javax.swing.JFrame {
     private void B_enviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_enviarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_B_enviarActionPerformed
-
+    OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
     private void B_enviarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_enviarMouseClicked
-        OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
         while(true){
-             // What % CPU load this current JVM is taking, from 0.0-1.0
+            // What % CPU load this current JVM is taking, from 0.0-1.0
             //System.out.println(osBean.getProcessCpuLoad());
             // What % load the overall system is at, from 0.0-1.0
-           cpu = (float) osBean.getSystemCpuLoad();
-           msg = Float.toString(cpu);
-           MqttMessage msg2 = new MqttMessage(msg.getBytes());
-           L_cpu.setText(msg);
-           System.out.println(msg);
-        try {
-            clienteP.publish("/cpu", msg2);
-            System.out.println("Mensagem publicada!");
-        } catch (MqttException ex) {
-            System.out.println("Erro ao publicar mensagem!");
-            Logger.getLogger(Publish.class.getName()).log(Level.SEVERE, null, ex);
-        }
-              
+            cpu = (float) osBean.getSystemCpuLoad();
+            cpu = cpu * 100;
+            aux = (int) cpu;
+            msg = Integer.toString(aux)+ "%";
+            L_cpu.setText(msg);
+            MqttMessage msg2 = new MqttMessage(msg.getBytes());
+            try {
+                clienteP.publish("/cpu", msg2);
+                System.out.println("Mensagem publicada!");
+            } catch (MqttException ex) {
+                System.out.println("Erro ao publicar mensagem!");
+                Logger.getLogger(Publish.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }       
     }//GEN-LAST:event_B_enviarMouseClicked
 
